@@ -7,31 +7,22 @@
 
 #include "debugmalloc.h"
 #include "palyakeszit.h"
-int main()
-{
+
+int main(){
     #ifdef _WIN32
-    SetConsoleOutputCP(CP_UTF8);
+        SetConsoleOutputCP(CP_UTF8);
     #endif
 
     Palya p;
-    int w = 30;
-    int h = 30;
-    int akna = 5;
+    p.magassag = 11;
+    p.szelesseg = 11;
+    p.aknadb = 3;
+    p.adat = (int **) malloc(p.magassag * sizeof(int*));
+    for (int y = 0; y < p.magassag; y++)
+        p.adat[y] = (int*) malloc (p.szelesseg * sizeof(int));
+    if(p.adat[0] == NULL || p.adat == NULL) {return 1;}
 
-    bool a = palya_lefog(&p,w,h,akna);
-    if (!a) {return 1;}
-
-    for (int i = 0; i < w; i++){
-        for(int j = 0; j < h; j++){
-            p.adat[j][i] = 0;
-            printf("%d ",p.adat[j][i]);
-        }
-        printf("\n");
-    }
-
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < p.magassag; y++)
         free(p.adat[y]);
     free(p.adat);
-
-    return 0;
 }
