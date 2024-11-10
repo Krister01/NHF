@@ -11,13 +11,14 @@
 
 int main(){
     #ifdef _WIN32
-        SetConsoleOutputCP(CP_UTF8);
+            SetConsoleOutputCP(CP_UTF8);
     #endif
     srand(time(0));
 
     int w, h, ak;
     printf("Paraméterek (szélesség, magasság, aknák száma): "); scanf("%d %d %d",&w ,&h, &ak);
 
+    /*Memória lefoglalása a pálya paramétereinek beállítása, a mátrix lefoglalása*/
     Palya p;
     p.magassag = h;
     p.szelesseg = w;
@@ -28,17 +29,21 @@ int main(){
         p.adat[y] = (int*) malloc (p.szelesseg * sizeof(int));
         if (p.adat[y] == NULL) {return 1;}
     }
-
+    //Ideiglenes hibaüzenetek debugoláshoz
     bool a = ures_feltolt(&p);
     if (!a) {printf("Nincs 0...");}
     bool b = akna_feltolt(&p);
     if (!b) {printf("Nincs akna...");}
+    bool c = szam_feltolt(&p);
+    if (!c) {printf("Nincs szám :(");}
 
     for(int y = 0; y < p.magassag; y++){
         for(int x = 0; x < p.szelesseg; x++)
             printf("%d ",p.adat[y][x]);
         printf("\n");
     }
+
+
 
     for (int y = 0; y < p.magassag; y++)
         free(p.adat[y]);
