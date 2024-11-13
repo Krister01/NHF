@@ -3,11 +3,13 @@ Az alábbi programrészek felelősek az aknakereső játékterének elkészíté
 A pályának az adatait egy "Palya" struktúrában tároljuk.
 Az "adat" mátrixban egész számokat tárolunk, ezek jelentése:
 0: lefedett üres mező, 1-8: lefedett számozott mező, 9: lefedett akna mező
-10: üres mező, 11-18: számozott mező, 19: akna mező
+10: felfedett üres mező, 11-18: felfedett számozott mező, 19: felfedett akna mező
+
 --------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 #include "palyakeszit.h"
 
 bool palya_lefog(Palya *p, int szelesseg, int magassag, int aknadb){
@@ -37,7 +39,7 @@ bool ures_feltolt(Palya *p){
 }//Kész
 
 /*Leellenőrzi, hogy egy tömbben benne van-e a keresett elem. A tömb méretét is meg kell adni!  */
-bool bennevan(int keresett, int *t, int meret){
+static bool bennevan(int keresett, int *t, int meret){
     for (int i = 0; i < meret; i++)
         if (keresett == t[i])
             return true;
@@ -66,6 +68,7 @@ bool akna_feltolt(Palya *p){
     return true;
 }//Kész
 
+/*Feltölti a pályát számokkal (1-8)*/
 bool szam_feltolt(Palya *p){
     for(int y = 0; y < p->magassag; y++)
         for(int x = 0; x < p->szelesseg; x++)
@@ -76,4 +79,4 @@ bool szam_feltolt(Palya *p){
                             if(p->adat[y+i][x+j] == 9)
                                 p->adat[y][x]++;
     return true;
-}
+}//Kész
