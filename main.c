@@ -24,15 +24,15 @@ int main(){
     p.magassag = h;
     p.szelesseg = w;
     p.aknadb = ak;
-    p.adat = (int **) malloc(p.magassag * sizeof(int*));
+    p.adat = (Mezo **) malloc(p.magassag * sizeof(Mezo*));
     if(p.adat == NULL) {return 1;}
     for (int y = 0; y < p.magassag; y++){
-        p.adat[y] = (int*) malloc (p.szelesseg * sizeof(int));
+        p.adat[y] = (Mezo*) malloc (p.szelesseg * sizeof(Mezo));
         if (p.adat[y] == NULL) {return 1;}
     }
 
     //Ideiglenes hibaüzenetek debugoláshoz
-    bool a = ures_feltolt(&p);
+    bool a = palya_betolt(&p);
     if (!a) {printf("Nincs 0...");}
     bool b = akna_feltolt(&p);
     if (!b) {printf("Nincs akna...");}

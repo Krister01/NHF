@@ -1,24 +1,18 @@
-/*--------------------------------------------------------------------------
-Az alábbi programrészek felelősek az aknakereső játékterének elkészítéséért.
-A pályának az adatait egy "Palya" struktúrában tároljuk.
-Az "adat" mátrixban egész számokat tárolunk, ezek jelentése:
-0: lefedett üres mező, 1-8: lefedett számozott mező, 9: lefedett akna mező
-10: felfedett üres mező, 11-18: felfedett számozott mező, 19: felfedett akna mező
 
---------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
 #include "palyakeszit.h"
 
+/*
 bool palya_lefog(Palya *p, int szelesseg, int magassag, int aknadb){
     p->szelesseg = szelesseg;
     p->magassag = magassag;
     p->aknadb = aknadb;
-    p->adat = (int **) malloc(magassag * sizeof(int*));
+    p->adat = (int **) malloc(magassag * sizeof(Mezo*));
     for (int y = 0; y < magassag; y++)
-        p->adat[y] = (int *) malloc(szelesseg * sizeof(int));
+        p->adat[y] = (int *) malloc(szelesseg * sizeof(Mezo));
     if (p->adat == NULL)
         return false;
     return true;
@@ -29,12 +23,18 @@ void palya_felszab(Palya *p){
         free(p->adat[y]);
     free(p->adat);
 } //Nem mûködik függvényként csak mainen belül
+*/
 
 /*Feltölti a pályát üres mezőkkel (0-kal) A használathoz meg kell adni egy "Palya" struktúrát*/
-bool ures_feltolt(Palya *p){
-    for(int y = 0; y < p->magassag; y++)
-        for(int x = 0; x < p->szelesseg; x++)
-            p->adat[y][x] = 0;
+
+bool palya_betolt(Palya *p){
+    for(int y = 0; y < p->magassag; y++){
+        for(int x = 0; x < p->szelesseg; x++){
+            p->adat[y][x].ertek = 0;
+            p->adat[y][x].lefedett = true;
+            p->adat[y][x].jelolt = false;
+        }
+    }
     return true;
 }//Kész
 
@@ -62,7 +62,7 @@ bool akna_feltolt(Palya *p){
     for (int i = 0; i < p->aknadb;i++){
         x = ak[i] % p->szelesseg;
         y = ak[i] / p->szelesseg;
-        p->adat[y][x] = 9;
+        p->adat[y][x].ertek = 9;
     }
     free(ak);
     return true;
@@ -72,11 +72,11 @@ bool akna_feltolt(Palya *p){
 bool szam_feltolt(Palya *p){
     for(int y = 0; y < p->magassag; y++)
         for(int x = 0; x < p->szelesseg; x++)
-            if(p->adat[y][x] != 9)
+            if(p->adat[y][x].ertek != 9)
                 for(int i = -1; i<= 1; i++)
                     for(int j = -1; j<= 1; j++)
                         if(y+i >= 0 && y+i < p->magassag && x+j >= 0 && x+j < p->szelesseg)
-                            if(p->adat[y+i][x+j] == 9)
-                                p->adat[y][x]++;
+                            if(p->adat[y+i][x+j].ertek == 9)
+                                p->adat[y][x].ertek++;
     return true;
 }//Kész
