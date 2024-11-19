@@ -1,32 +1,22 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
 #include "palyakeszit.h"
 
-/*
-bool palya_lefog(Palya *p, int szelesseg, int magassag, int aknadb){
-    p->szelesseg = szelesseg;
-    p->magassag = magassag;
-    p->aknadb = aknadb;
-    p->adat = (int **) malloc(magassag * sizeof(Mezo*));
+Palya *palya_lefog(Palya *p, int szelesseg, int magassag, int aknadb){
+    Palya *ujpalya = p;
+    ujpalya->szelesseg = szelesseg;
+    ujpalya->magassag = magassag;
+    ujpalya->aknadb = aknadb;
+    ujpalya->adat = (Mezo**) malloc(magassag * sizeof(Mezo*));
+    if(ujpalya->adat == NULL) {return NULL;}
     for (int y = 0; y < magassag; y++)
-        p->adat[y] = (int *) malloc(szelesseg * sizeof(Mezo));
-    if (p->adat == NULL)
-        return false;
-    return true;
-} // Nem mûködik függvényként csak mainen belül
+        ujpalya->adat[y] = (Mezo*) malloc(szelesseg * sizeof(Mezo));
+    return ujpalya;
+}
 
-void palya_felszab(Palya *p){
-    for (int y = 0; y < p->magassag; ++y)
-        free(p->adat[y]);
-    free(p->adat);
-} //Nem mûködik függvényként csak mainen belül
-*/
 
 /*Feltölti a pályát üres mezőkkel (0-kal) A használathoz meg kell adni egy "Palya" struktúrát*/
-
 bool palya_betolt(Palya *p){
     for(int y = 0; y < p->magassag; y++){
         for(int x = 0; x < p->szelesseg; x++){
