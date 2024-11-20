@@ -23,8 +23,9 @@ int main(){
     int w, h, ak;
     printf("Paraméterek (szélesség magasság aknák száma): "); scanf("%d %d %d",&w ,&h, &ak);
 
-    Palya p;
-    p = palya_lefog(&p, w, h, ak);
+    Palya *p = palya_lefog(w ,h ,ak);
+    if (p == NULL) {return 1;}
+
     /*
     p.magassag = h;
     p.szelesseg = w;
@@ -37,11 +38,11 @@ int main(){
     }
     */
     //Ideiglenes hibaüzenetek debugoláshoz
-    bool a = palya_betolt(&p);
+    bool a = palya_betolt(p);
     if (!a) {printf("Nincs 0...");}
-    bool b = akna_feltolt(&p);
+    bool b = akna_feltolt(p);
     if (!b) {printf("Nincs akna...");}
-    bool c = szam_feltolt(&p);
+    bool c = szam_feltolt(p);
     if (!c) {printf("Nincs szám :(");}
 
     //Játék:
@@ -50,17 +51,17 @@ int main(){
     printf("Válaszon ki egy mezőt (sor oszlop): "); scanf("%d %d", &y, &x);
     while(y != -1 || x != -1){
 
-        if(x-1 < 0 || y-1 < 0 || x-1 > p.szelesseg || y-1 > p.magassag){
+        if(x-1 < 0 || y-1 < 0 || x-1 > p->szelesseg || y-1 > p->magassag){
             printf("Túlindexelsz!"); scanf("%d %d", &y, &x);
             continue;
         }
 
-        if(vesztes(&p, y-1, x-1)){
+        if(vesztes(p, y-1, x-1)){
             palya_kiir(p);
             printf("Vesztettel.... :(\n");
             break;
         }
-        int f = felfed(&p, y-1, x-1);
+        int f = felfed(p, y-1, x-1);
         if(f == 1){
             printf("Ezt a mezőt már látod, adj meg egy másikat! "); scanf("%d %d", &y, &x);
             continue;
@@ -78,7 +79,8 @@ int main(){
 
 
     //Memória felszabadítás
-    for (int y = 0; y < p.magassag; y++)
-        free(p.adat[y]);
-    free(p.adat);
+    for (int y = 0; y < p->magassag; y++)
+        free(p->adat[y]);
+    free(p->adat);
+    free(p);
 }

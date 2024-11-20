@@ -3,16 +3,18 @@
 #include <stdbool.h>
 #include "palyakeszit.h"
 
-Palya *palya_lefog(Palya *p, int szelesseg, int magassag, int aknadb){
-    Palya *ujpalya = p;
-    ujpalya->szelesseg = szelesseg;
-    ujpalya->magassag = magassag;
-    ujpalya->aknadb = aknadb;
-    ujpalya->adat = (Mezo**) malloc(magassag * sizeof(Mezo*));
-    if(ujpalya->adat == NULL) {return NULL;}
-    for (int y = 0; y < magassag; y++)
-        ujpalya->adat[y] = (Mezo*) malloc(szelesseg * sizeof(Mezo));
-    return ujpalya;
+Palya *palya_lefog(int szelesseg, int magassag, int aknadb){
+    Palya *p = (Palya*) malloc(sizeof(Palya));
+    p->szelesseg = szelesseg;
+    p->magassag = magassag;
+    p->aknadb = aknadb;
+    p->adat = (Mezo**) malloc(magassag * sizeof(Mezo*));
+    if(p->adat == NULL) {return NULL;}
+    for (int y = 0; y < magassag; y++){
+        p->adat[y] = (Mezo*) malloc(szelesseg * sizeof(Mezo));
+        if(p->adat == NULL) {return NULL;}
+    }
+    return p;
 }
 
 

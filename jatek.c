@@ -23,13 +23,13 @@ void megjelol(Palya *p, int y, int x){
     p->adat[y][x].jelolt = true;
 }//Kesz
 
-bool nyeres(Palya p){
+bool nyeres(Palya *p){
     int n = 0;
-    for(int y = 0; y < p.magassag; y++)
-        for(int x = 0; x < p.szelesseg; x++)
-            if(p.adat[y][x].lefedett == true)
+    for(int y = 0; y < p->magassag; y++)
+        for(int x = 0; x < p->szelesseg; x++)
+            if(p->adat[y][x].lefedett == true)
                 n++;
-    if(n == p.aknadb){
+    if(n == p->aknadb){
         return true;
     }
     return false;

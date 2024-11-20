@@ -13,7 +13,7 @@ typedef struct Palya{
     int aknadb;
 }Palya;
 
-Palya *palya_lefog(Palya *p, int szelesseg, int magassag, int aknadb);
+Palya *palya_lefog(int szelesseg, int magassag, int aknadb);
 
 //void palya_felszab(Palya *p);
 
