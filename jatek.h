@@ -2,10 +2,6 @@
 #define JATEK_H
 #include "palyakeszit.h"
 
-int felfed(Palya *p, int x, int y);
-
-bool nyeres(Palya *p);
-
-bool vesztes(Palya *p, int y, int x);
+void jatek(Palya *p);
 
 #endif // JATEK_H

@@ -1,5 +1,6 @@
 #ifndef PALYAKESZIT_H
 #define PALYAKESZIT_H
+
 typedef struct Mezo{
     int ertek;
     bool lefedett;
@@ -11,16 +12,17 @@ typedef struct Palya{
     int szelesseg;
     int magassag;
     int aknadb;
+    int masodperc;
+    bool idozito;
 }Palya;
 
-Palya *palya_lefog(int szelesseg, int magassag, int aknadb);
+bool egyedi_parameter(int *szelesseg, int *magassag, int *aknadb);
 
-//void palya_felszab(Palya *p);
+void palya_parameter(Palya *p, int magassag, int szelesseg, int aknadb);
 
-bool palya_betolt(Palya *p);
+Palya *palya_lefog(Palya *p);
 
-bool akna_feltolt(Palya *p);
+void palya_felszab(Palya *p);
 
-bool szam_feltolt(Palya *p);
-
+bool palya_keszit (Palya *p);
 #endif // PALYAKESZIT_H

@@ -2,24 +2,60 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "palyakeszit.h"
+#include "debugmalloc.h"
 
-Palya *palya_lefog(int szelesseg, int magassag, int aknadb){
-    Palya *p = (Palya*) malloc(sizeof(Palya));
-    p->szelesseg = szelesseg;
-    p->magassag = magassag;
-    p->aknadb = aknadb;
-    p->adat = (Mezo**) malloc(magassag * sizeof(Mezo*));
-    if(p->adat == NULL) {return NULL;}
-    for (int y = 0; y < magassag; y++){
-        p->adat[y] = (Mezo*) malloc(szelesseg * sizeof(Mezo));
-        if(p->adat == NULL) {return NULL;}
+bool egyedi_parameter(int *szelesseg, int *magassag, int *aknadb){
+    printf("Adja meg a kívánt paramétereket (szelesseg magassag aknadb): ");
+    fflush(stdin);
+    int db = scanf("%d %d %d",szelesseg, magassag, aknadb);
+    if(db != 3){
+        printf("Csak számokat adj meg!\n");
+        return false;
     }
-    return p;
+    if(*szelesseg < 4 || *magassag < 4 ){
+        printf("A pálya túl kicsi.\n");
+        return false;
+    }
+    if(*szelesseg > 99 || *magassag > 99 ){
+        printf("A pálya túl nagy.\n");
+        return false;
+    }
+    if(*aknadb <= 0){
+        printf("Legyen legalább egy akna!\n");
+        return false;
+    }
+    if(*aknadb >= *szelesseg * *magassag){
+        printf("Túl sok akna van");
+        return false;
+    }
+    return true;
 }
 
+void palya_parameter(Palya *p, int magassag, int szelesseg, int aknadb){
+    p->magassag = magassag;
+    p->szelesseg = szelesseg;
+    p->aknadb = aknadb;
+}
 
-/*Feltölti a pályát üres mezőkkel (0-kal) A használathoz meg kell adni egy "Palya" struktúrát*/
-bool palya_betolt(Palya *p){
+Palya *palya_lefog(Palya *p){
+    Palya *ujp = p;
+    ujp->adat = (Mezo**) malloc(ujp->magassag * sizeof(Mezo*));
+    if(ujp->adat == NULL) {return NULL;}
+    for (int y = 0; y < ujp->magassag; y++){
+        ujp->adat[y] = (Mezo*) malloc(ujp->szelesseg * sizeof(Mezo));
+        if(ujp->adat[y] == NULL) {return NULL;}
+    }
+    return ujp;
+}
+
+void palya_felszab(Palya *p){
+    for (int y = 0; y < p->magassag; y++)
+        free(p->adat[y]);
+    free(p->adat);
+}
+
+//Feltölti a pályát üres mezőkkel (0-kal) A használathoz meg kell adni egy "Palya" struktúrát
+static bool palya_betolt(Palya *p){
     for(int y = 0; y < p->magassag; y++){
         for(int x = 0; x < p->szelesseg; x++){
             p->adat[y][x].ertek = 0;
@@ -28,18 +64,18 @@ bool palya_betolt(Palya *p){
         }
     }
     return true;
-}//Kész
+}
 
-/*Leellenőrzi, hogy egy tömbben benne van-e a keresett elem. A tömb méretét is meg kell adni!  */
+//Leellenőrzi, hogy egy tömbben benne van-e a keresett elem. A tömb méretét is meg kell adni!
 static bool bennevan(int keresett, int *t, int meret){
     for (int i = 0; i < meret; i++)
         if (keresett == t[i])
             return true;
     return false;
-}//Kész
+}
 
-/*Feltölti a pálya véletlenül kiválasztott elemeit aknákkal (9-esekkel)*/
-bool akna_feltolt(Palya *p){
+//Feltölti a pálya véletlenül kiválasztott elemeit aknákkal (9-esekkel)
+static bool akna_feltolt(Palya *p){
     int *ak = (int*) malloc(p->aknadb* sizeof(int));
     if (ak == NULL) {return false;}
     int aknahely;
@@ -60,8 +96,8 @@ bool akna_feltolt(Palya *p){
     return true;
 }//Kész
 
-/*Feltölti a pályát számokkal (1-8)*/
-bool szam_feltolt(Palya *p){
+//Feltölti a pályát számokkal (1-8)
+static bool szam_feltolt(Palya *p){
     for(int y = 0; y < p->magassag; y++)
         for(int x = 0; x < p->szelesseg; x++)
             if(p->adat[y][x].ertek != 9)
@@ -70,5 +106,12 @@ bool szam_feltolt(Palya *p){
                         if(y+i >= 0 && y+i < p->magassag && x+j >= 0 && x+j < p->szelesseg)
                             if(p->adat[y+i][x+j].ertek == 9)
                                 p->adat[y][x].ertek++;
+    return true;
+}//Kész
+
+bool palya_keszit (Palya *p){
+    if(!palya_betolt(p)) {return false;}
+    if(!akna_feltolt(p)) {return false;}
+    if(!szam_feltolt(p)) {return false;}
     return true;
 }//Kész
